@@ -1,11 +1,10 @@
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 # echo source ~/.bash_profile
 
-eval "$(brew shellenv)"
-# source .zprofile in all zsh shells (just in case)
-# [[ -f "$HOME/.zprofile" ]] && source "$HOME/.zprofile"
-
-eval "$(gdircolors)"
+# Initialize dircolors for Linux
+if command -v dircolors >/dev/null 2>&1; then
+    eval "$(dircolors -b)"
+fi
 
 source $ZSH/oh-my-zsh.sh
 
@@ -83,16 +82,21 @@ alias fman="compgen -c | fzf | xargs man"
 # zoxide (called from ~/scripts/)
 alias nzo="~/scripts/zoxide_openfiles_nvim.sh"
 
-# Next level of an ls 
-# options :  --no-filesize --no-time --no-permissions 
-alias ls="eza --no-filesize --long --color=always --icons=always --no-user" 
+# Enhanced ls with eza (install with: yay -S eza)
+if command -v eza >/dev/null 2>&1; then
+    alias ls="eza --no-filesize --long --color=always --icons=always --no-user"
+else
+    alias ls="ls --color=auto"
+fi 
 
 # tree
 alias tree="tree -L 3 -a -I '.git' --charset X "
 alias dtree="tree -L 3 -a -d -I '.git' --charset X "
 
-# lstr
-alias lstr="lstr --icons"
+# lstr (install with: cargo install lstr or yay -S lstr)
+if command -v lstr >/dev/null 2>&1; then
+    alias lstr="lstr --icons"
+fi
 
 # git aliases
 alias gt="git"
@@ -110,12 +114,19 @@ alias lg="lazygit"
 # mpd start alias
 alias mpds="mpd ~/.config/mpd/mpd.conf"
 
-# obsidian icloud path
-alias sethvault="cd ~/Library/Mobile\ Documents/iCloud~md~obsidian/Documents/sethVault/"
+# obsidian vault path (update path as needed for Linux)
+# alias sethvault="cd ~/Documents/ObsidianVault/"
 # ---------------------------------------
 
-# brew installations activation (new mac systems brew path: opt/homebrew , not usr/local )
-source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+# Arch Linux zsh plugins
+if [[ -f /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ]]; then
+    source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+fi
 
-. "/Users/personal/.deno/env"
+if [[ -f /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
+    source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+fi
+
+# Deno setup (uncomment and update path if using Deno)
+# export DENO_INSTALL="$HOME/.deno"
+# export PATH="$DENO_INSTALL/bin:$PATH"
